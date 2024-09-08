@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Board">
+
+    <!--parameterType : 쿼리에 전달되는 입력값의 타입-->
+    <insert id="save" parameterType="boardDto">  <!--prarameterType : boardDto 경로의 Alias-->
+        INSERT INTO board_table(boardTitle, boardWriter, boardPass, boardContents)
+        VALUES(#{boardTitle}, #{boardWriter}, #{boardPass}, #{boardContents})
+    </insert>
+
+    <!--resultType : 쿼리의 결과값의 타입-->
+    <select id="findAll" resultType="boardDto">
+        SELECT id, boardTitle, boardWriter, boardHits, date_format(createdAt, "%Y-%m-%d") as createdAt
+        FROM board_table
+        ORDER BY id DESC
+    </select>
+
+    <update id="updateHits" parameterType="Long">
+        UPDATE board_table
+        SET boardHits = boardHits+1
+        WHERE id = #{id}
+    </update>
+
+    <select id="findById" parameterType="Long" resultType="boardDto">
+        SELECT id, boardTitle, boardWriter, boardPass, boardContents, boardHits,
+            date_format(createdAt, "%Y-%m-%d %H-%i-%s") as createdAt
+        FROM board_table
+        WHERE id = #{id}
+    </select>
+
+    <update id="update" parameterType="boardDto">
+        UPDATE board_table
+        SET boardTitle = #{boardTitle}, boardContents = #{boardContents}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="Long">
+        DELETE FROM board_table
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
