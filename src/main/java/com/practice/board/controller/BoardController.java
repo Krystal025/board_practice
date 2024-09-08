@@ -18,13 +18,13 @@ public class BoardController {
 
     // 글 작성페이지 조회
     @GetMapping("/save")
-    public String save(){
+    public String save() {
         return "save";
     }
 
     // 글 작성(등록)
     @PostMapping("/save")  //파라미터에 @ModelAttribute를 생략해도 사용자 정의 객체는 Spring MVC가 자동으로 해당 객체에 바인딩해줌)
-    public String save(BoardDto boardDto){
+    public String save(BoardDto boardDto) {
         System.out.println("boardDto = " + boardDto);
         boardService.save(boardDto);
         // redirect : 화면을 띄우는게 아니라 다시 "/list"를 호출하는 것
@@ -37,7 +37,7 @@ public class BoardController {
      */
     // 글 목록 조회
     @GetMapping("/list")
-    public String getList(Model model){
+    public String getList(Model model) {
         List<BoardDto> boardDtoList = boardService.findAll();
         model.addAttribute("boardList", boardDtoList);
         System.out.println("boardDtoList = " + boardDtoList);
@@ -46,7 +46,7 @@ public class BoardController {
 
     // 글 상세페이지 조회
     @GetMapping("/{id}")
-    public String getDetail(@PathVariable("id") Long id, Model model){
+    public String getDetail(@PathVariable("id") Long id, Model model) {
         // 조회수 처리
         boardService.updateHits(id);
         // 상세내용 가져오기
@@ -56,28 +56,26 @@ public class BoardController {
         return "detail";
     }
 
-    // 수정할 글 조회
+    // 게시글 수정페이지 조회
     @GetMapping("/update/{id}")
-    public String update(@PathVariable("id") Long id, Model model){
+    public String update(@PathVariable("id") Long id, Model model) {
         BoardDto boardDto = boardService.findById(id);
         model.addAttribute("board", boardDto);
         return "update";
     }
 
-    // 글 수정 요청
+    // 게시글 수정 요청
     @PostMapping("/update/{id}")
-    public String update(BoardDto boardDto, Model model){
-        // Dto 수정 요청
-        boardService.update(boardDto);
+    public String update(@PathVariable("id") Long id, BoardDto boardDto, Model model) {
         // 다시 id로 수정된 Dto를 가져옴
-        BoardDto updatedDto = boardService.findById(boardDto.getId());
+        BoardDto updatedDto = boardService.updateAndReturn(boardDto, id);
         model.addAttribute("board", updatedDto);
         return "detail";
     }
 
     // 글 삭제
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id){
+    public String delete(@PathVariable("id") Long id) {
         boardService.delete(id);
         return "redirect:/list";
     }
