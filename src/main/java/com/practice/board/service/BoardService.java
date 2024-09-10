@@ -15,6 +15,7 @@ public class BoardService {
 
     // 게시글 등록
     public void save(BoardDto boardDto) {
+        System.out.println("Saving BoardDto: " + boardDto);
         boardMapper.save(boardDto);
     }
     // 게시글 조회
@@ -25,21 +26,16 @@ public class BoardService {
     public BoardDto findById(Long id) {
         return boardMapper.findById(id);
     }
-    // 조회수 업데이트
-    public void updateHits(Long id) {
-        boardMapper.updateHits(id);
-    }
     // 게시글 수정
     public void update(BoardDto boardDto) {
         boardMapper.update(boardDto);
     }
-    // 수정된 게시글 반환
-    public BoardDto updateAndReturn(BoardDto boardDto, Long id) {
-        boardMapper.update(boardDto);
-        return boardMapper.findById(id);
-    }
     // 게시글 삭제
     public void delete(Long id) {
         boardMapper.delete(id);
+    }
+    // 조회수 증가
+    public void updateHits(Long id) {
+        boardMapper.updateHits(id);
     }
 }
